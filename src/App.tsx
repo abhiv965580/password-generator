@@ -16,7 +16,7 @@ function App() {
   const [checkedUppercase, setCheckedUppercase] = React.useState(true);
   const [checkedNumbers, setCheckedNumbers] = React.useState(true);
   const [checkedSpecial, setCheckedSpecial] = React.useState(true);
-  const [length, setLength] = React.useState(20);
+  const [length, setLength] = React.useState(10);
   const [copied, setCopied] = React.useState(false);
   const [password, setPassword] = React.useState("");
   const [useCss, theme] = useStyletron();
@@ -83,6 +83,7 @@ function App() {
               top: "20px",
               transform: "translate(-50%, 0)",
               width: "95vw",
+              textAlign: "center",
             },
           },
         }}
@@ -97,10 +98,37 @@ function App() {
           onChange={(event) => setNewPassword(event.target.value)}
           clearOnEscape
           overrides={{
-            InputContainer: {
-              style: ({ $theme }) => ({
-                borderWidth: $theme.sizing.scale100,
-              }),
+            Root: {
+              style: (props) => {
+                const {
+                  $disabled,
+                  $error,
+                  $isFocused,
+                  $theme: { colors, sizing },
+                } = props;
+                const border = $disabled
+                  ? colors.borderTransparent
+                  : $error
+                  ? colors.borderNegative
+                  : $isFocused
+                  ? "darkseagreen"
+                  : colors.borderOpaque;
+                return {
+                  borderLeftColor: border,
+                  borderRightColor: border,
+                  borderTopColor: border,
+                  borderBottomColor: border,
+                  boxShadow: `0 0 ${sizing.scale100} ${
+                    $disabled
+                      ? "transparent"
+                      : $error
+                      ? colors.shadowError
+                      : $isFocused
+                      ? "lightseagreen"
+                      : "transparent"
+                  }`,
+                };
+              },
             },
             After: () => (
               <Button
@@ -128,16 +156,44 @@ function App() {
           <Button
             onClick={copyToClipboard}
             overrides={{
-              BaseButton: { style: { width: "60%", margin: "20px" } },
+              BaseButton: {
+                style: {
+                  width: "60%",
+                  margin: "20px",
+                  backgroundColor: copied
+                    ? theme.colors.positive400
+                    : theme.colors.negative400,
+                },
+              },
             }}
           >
             {copied ? "Copied!" : "Copy"}
           </Button>
         </StyledAction>
         <Accordion>
-          <Panel title="Options">
+          <Panel
+            overrides={{
+              Header: {
+                style: () => ({
+                  fontSize: "1.2rem",
+                  textAlign: "left",
+                }),
+              },
+            }}
+            title="Options"
+          >
             <Block marginBottom="scale800">
-              <FormControl label="Length">
+              <FormControl
+                overrides={{
+                  Label: {
+                    style: () => ({
+                      fontSize: "1.2rem",
+                      textAlign: "left",
+                    }),
+                  },
+                }}
+                label="Length"
+              >
                 <Slider
                   overrides={{
                     ThumbValue: {
@@ -148,7 +204,12 @@ function App() {
                     },
                     Root: {
                       style: {
-                        margin: "30px 0px 20px 0px",
+                        margin: "30px 0px 5px 0px",
+                      },
+                    },
+                    Thumb: {
+                      style: {
+                        backgroundColor: "green",
                       },
                     },
                   }}
@@ -164,10 +225,20 @@ function App() {
                 justifyContent: "center",
                 borderWidth: "1px",
                 flexDirection: "column",
-                gap: "5px",
+                gap: "10px",
                 marginLeft: "10px",
               }}
             >
+              <div
+                style={{
+                  textAlign: "left",
+                  fontSize: "1.2rem",
+                  fontWeight: "600",
+                  marginBottom: "10px",
+                }}
+              >
+                Characters:
+              </div>
               <Checkbox
                 checked={checkedUppercase}
                 onChange={(e) => setCheckedUppercase(e.target.checked)}
@@ -175,8 +246,8 @@ function App() {
                 overrides={{
                   Checkmark: {
                     style: ({ $theme }) => ({
-                      outline: `${$theme.colors.warning600} solid`,
-                      backgroundColor: $theme.colors.warning600,
+                      outline: `${$theme.colors.accent400} solid`,
+                      backgroundColor: $theme.colors.accent400,
                       borderRadius: "3px",
                     }),
                   },
@@ -191,8 +262,8 @@ function App() {
                 overrides={{
                   Checkmark: {
                     style: ({ $theme }) => ({
-                      outline: `${$theme.colors.warning600} solid`,
-                      backgroundColor: $theme.colors.warning600,
+                      outline: `${$theme.colors.accent400} solid`,
+                      backgroundColor: $theme.colors.accent400,
                       borderRadius: "3px",
                     }),
                   },
@@ -207,8 +278,8 @@ function App() {
                 overrides={{
                   Checkmark: {
                     style: ({ $theme }) => ({
-                      outline: `${$theme.colors.warning600} solid`,
-                      backgroundColor: $theme.colors.warning600,
+                      outline: `${$theme.colors.accent400} solid`,
+                      backgroundColor: $theme.colors.accent400,
                       borderRadius: "3px",
                     }),
                   },
@@ -223,8 +294,8 @@ function App() {
                 overrides={{
                   Checkmark: {
                     style: ({ $theme }) => ({
-                      outline: `${$theme.colors.warning600} solid`,
-                      backgroundColor: $theme.colors.warning600,
+                      outline: `${$theme.colors.accent400} solid`,
+                      backgroundColor: $theme.colors.accent400,
                       borderRadius: "3px",
                     }),
                   },
